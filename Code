@@ -1,0 +1,36 @@
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+
+kc = pd.read_csv('kc survey.csv', usecols=['stop_family', 'stop_friends', 'stop_pass', 'stop_bt', 'stop_tix124', 'stop_tix240', 'stop_ins', 'stop_work', 'stop_app', 'stop_block', 'stop_crash', 'stop_kill', 'agegrp1', 'Gender'])
+
+male = kc[kc['Gender']==1]
+female = kc[kc['Gender']==2]
+
+
+both  = kc[kc['agegrp1']==2]
+both.drop(both.index[(both["Gender"] == 3)],axis=0,inplace=True)
+
+# m_data = male[male['agegrp1']==2]
+# f_data = female[female['agegrp1']==2]
+
+change = {1:'yes', 2:'no'}
+params = ['stop_family', 'stop_friends', 'stop_pass', 'stop_bt', 'stop_tix124', 'stop_tix240', 'stop_ins', 'stop_work', 'stop_app', 'stop_block', 'stop_crash', 'stop_kill']
+# for i1 in params:
+#     m_data[i1] = m_data[i1].map(change)
+# for i2 in params:
+#     f_data[i2] = f_data[i2].map(change)
+for i3 in params:
+    both[i3] = both[i3].map(change)
+
+genderchange = {1:'male', 2:'female'}
+categories = ['Gender']
+for i4 in categories:
+    both[i4] = both[i4].map(genderchange)
+
+
+print(both)
+fig_m = px.histogram(both, x='stop_bt', color="Gender", title="Stopping for Bluetooh Devices Per Gender", barmode='group', labels='Would they stop?')
+# fig_f = px.bar(f_data, x='stop_family', color="agegrp1", title="Age", barmode='group')
+fig_m.show()
+# fig_f.show()
